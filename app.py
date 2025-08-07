@@ -1,5 +1,4 @@
 import os
-import json
 
 import streamlit as st
 from groq import Groq
@@ -8,10 +7,7 @@ st.set_page_config(page_title="Llama 3.3 Chatbot",
                    page_icon=":llama:",
                    layout="centered")
 
-working_dir = os.path.dirname(os.path.abspath(__file__))
-json_data = json.load(open(os.path.join(working_dir, "config.json")))
-
-os.environ["GROQ_API_KEY"] = json_data["GROQ_API_KEY"]
+os.environ["GROQ_API_KEY"] = st.secrets["GROQ_API_KEY"]
 
 client = Groq()
 
