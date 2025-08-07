@@ -33,28 +33,31 @@ if prompt:
 
     with st.chat_message("user"):
         st.markdown(prompt)
-
-    # Placeholder for the assistant's message
-    with st.chat_message("assistant"):
-        assistant_placeholder = st.empty()
-        full_response = ""
-
-        # Streaming response
-        response = client.chat.completions.create(
-            model=selected,
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant"},
-                *st.session_state.chat_history
-            ],
-            max_tokens=1000,
-            temperature=0.7,
-            stream=True,  # <-- Enable streaming
-        )
-
-        for chunk in response:
-            delta = chunk.choices[0].delta.content or ""
-            full_response += delta
-            assistant_placeholder.markdown(full_response)
-
-    # Add final response to chat history
-    st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+    try:
+        # Placeholder for the assistant's message
+        with st.chat_message("assistant"):
+            assistant_placeholder = st.empty()
+            full_response = ""
+    
+            # Streaming response
+            response = client.chat.completions.create(
+                model=selected,
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant"},
+                    *st.session_state.chat_history
+                ],
+                max_tokens=1000,
+                temperature=0.7,
+                stream=True,  # <-- Enable streaming
+            )
+    
+            for chunk in response:
+                delta = chunk.choices[0].delta.content or ""
+                full_response += delta
+                assistant_placeholder.markdown(full_response)
+  
+        # Add final response to chat history
+        st.session_state.chat_history.append({"role": "assistant", "content": full_response})
+    except Eception as e:
+        st.error("⚠️ The model is temporarily unavailable — likely due to free-tier limits being reached.")
+        st.info("Please try again later or refresh the app after some time.")
