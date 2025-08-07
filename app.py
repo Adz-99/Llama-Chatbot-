@@ -58,6 +58,6 @@ if prompt:
   
         # Add final response to chat history
         st.session_state.chat_history.append({"role": "assistant", "content": full_response})
-    except Eception as e:
+    except Exception as e:
         st.error("⚠️ The model is temporarily unavailable — likely due to free-tier limits being reached.")
         st.info("Please try again later or refresh the app after some time.")
